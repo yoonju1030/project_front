@@ -5,8 +5,11 @@
         <li>
           <v-btn @click="pageLinkToHome()">Home</v-btn>
         </li>
-        <li>
-          <v-btn @click="pageLingToLogin()">Login</v-btn>
+        <li v-if="$store.state.isLogined">
+          <v-btn @click="logout()">logout</v-btn>
+        </li>
+        <li v-else>
+          <v-btn @click="pageLingToLogin()">login</v-btn>
         </li>
       </ul>
     </v-app-bar>
@@ -14,15 +17,27 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 export default {
-    methods: {
-        pageLinkToHome() {
-            this.$router.push({ path: "/" });
-        },
-        pageLingToLogin() {
-            this.$router.push({ path: "/login" });
-        }
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+
+    const logout = async () => {
+      await store.commit("setLogin", false)
+      router.push({name:"Home"})
     }
+    return {logout}
+  },
+  methods: {
+      pageLinkToHome() {
+          this.$router.push({ path: "/" });
+      },
+      pageLingToLogin() {
+          this.$router.push({ path: "/login" });
+      }
+  }
 }
 
 </script>
